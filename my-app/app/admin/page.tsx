@@ -1,11 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { useState, useEffect, useMemo } from 'react';
+import { getSupabaseClient } from '@/lib/supabase';
 
 interface Book {
   id: number;
@@ -16,6 +12,7 @@ interface Book {
 }
 
 export default function AdminPanel() {
+  const supabase = useMemo(() => getSupabaseClient(), []);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [books, setBooks] = useState<Book[]>([]);
