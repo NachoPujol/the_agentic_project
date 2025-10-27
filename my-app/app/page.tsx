@@ -3,9 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { getSupabaseClient } from '@/lib/supabase';
 
-// Supabase client setup
-const supabase = getSupabaseClient();
-
 // Types
 interface Guest {
   id: number;
@@ -90,6 +87,7 @@ export default function Page() {
 // Database functions
 const getPublishedEpisodes = async (limit: number = 8) => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('episodes')
       .select(`
@@ -138,6 +136,7 @@ const getPublishedEpisodes = async (limit: number = 8) => {
 
 const getBookRecommendations = async (): Promise<BookRecommendation[]> => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('guest_book_recommendations')
       .select(`
@@ -182,6 +181,7 @@ const getBookRecommendations = async (): Promise<BookRecommendation[]> => {
 
 const getFMKRankings = async (limit: number = 10): Promise<FMKRanking[]> => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('fmk_rankings')
       .select(`
@@ -217,6 +217,7 @@ const getFMKRankings = async (limit: number = 10): Promise<FMKRanking[]> => {
 
 const getCompanies = async (): Promise<Company[]> => {
   try {
+    const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('companies')
       .select('*')
