@@ -64,17 +64,18 @@ export default function AdminPanel() {
         const data = result.data;
 
         // Auto-fill form fields
-        (document.querySelector('input[name="episode_number"]') as HTMLInputElement).value = data.episodeNumber || '';
-        (document.querySelector('input[name="title"]') as HTMLInputElement).value = data.title || '';
-        (document.querySelector('input[name="thumbnail_url"]') as HTMLInputElement).value = data.thumbnail || '';
-        (document.querySelector('input[name="youtube_video_id"]') as HTMLInputElement).value = data.videoId || '';
+        if (data.episodeNumber) (document.querySelector('input[name="episode_number"]') as HTMLInputElement).value = data.episodeNumber;
+        if (data.title) (document.querySelector('input[name="title"]') as HTMLInputElement).value = data.title;
+        if (data.thumbnail) (document.querySelector('input[name="thumbnail_url"]') as HTMLInputElement).value = data.thumbnail;
+        if (data.videoId) (document.querySelector('input[name="youtube_video_id"]') as HTMLInputElement).value = data.videoId;
 
-        if (data.guestName) {
-          (document.querySelector('input[name="guest_name"]') as HTMLInputElement).value = data.guestName;
-        }
-        if (data.guestCompany) {
-          (document.querySelector('input[name="guest_company"]') as HTMLInputElement).value = data.guestCompany;
-        }
+        // Guest information
+        if (data.guestName) (document.querySelector('input[name="guest_name"]') as HTMLInputElement).value = data.guestName;
+        if (data.guestTitle) (document.querySelector('input[name="guest_title"]') as HTMLInputElement).value = data.guestTitle;
+        if (data.guestCompany) (document.querySelector('input[name="guest_company"]') as HTMLInputElement).value = data.guestCompany;
+        if (data.guestBio) (document.querySelector('textarea[name="guest_bio"]') as HTMLTextAreaElement).value = data.guestBio;
+        if (data.guestWebsite) (document.querySelector('input[name="guest_website"]') as HTMLInputElement).value = data.guestWebsite;
+        if (data.guestLinkedIn) (document.querySelector('input[name="guest_linkedin"]') as HTMLInputElement).value = data.guestLinkedIn;
 
         showMessage('✅ YouTube data extracted successfully! Review and adjust fields as needed.');
       } else {
