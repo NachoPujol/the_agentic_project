@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase';
 
 // Supabase client setup
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://gbqzphhekdzhdjuxqync.supabase.co';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdicXpwaGhla2R6aGRqdXhxeW5jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1NjM2NzYsImV4cCI6MjA3NDEzOTY3Nn0.Ay4CMb1yhosZeHGIIwlxDuTehRqilPu95svEzl72Gak';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = getSupabaseClient();
 
 // Types
 interface Guest {
