@@ -136,16 +136,16 @@ function parseYouTubeContent(title: string, description: string) {
   // === PARSE DESCRIPTION ===
   if (description) {
     const lines = description.split('\n');
+    const firstParagraph = lines.slice(0, 10).join(' ').trim();
 
     // Look for common patterns in description
     for (let i = 0; i < Math.min(lines.length, 20); i++) {
       const line = lines[i].trim();
 
-      // Extract guest name patterns
+      // Extract guest name patterns from structured lines
       if (!guestName) {
         const guestPatterns = [
-          /(?:Guest|Today|Featuring|with):\s*(.+?)(?:\n|$)/i,
-          /(?:Guest|Speaker):\s*(.+?)(?:\n|$)/i,
+          /(?:Guest|Today|Featuring|with|Speaker):\s*(.+?)(?:\n|$)/i,
         ];
         for (const pattern of guestPatterns) {
           const match = line.match(pattern);
@@ -155,6 +155,49 @@ function parseYouTubeContent(title: string, description: string) {
           }
         }
       }
+    }
+
+    // If no guest name found yet, analyze first paragraph more intelligently
+    if (!guestName && firstParagraph.length > 20) {
+      // Pattern: "In this episode, we talk with NAME"
+      let match = firstParagraph.match(/(?:talk|speak|chat|interview|join|welcome|meet)(?:ing|ed)?\s+(?:with|to)?\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)/i);
+      if (match) {
+        guestName = match[1].trim();
+      }
+
+      // Pattern: "NAME is a/an/the [title] at/of [company]"
+      if (!guestName) {
+        match = firstParagraph.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+is\s+(?:a|an|the)\s+(.+?)\s+(?:at|of|for)\s+([A-Z][^.,]+)/);
+        if (match) {
+          guestName = match[1].trim();
+          if (!guestTitle) guestTitle = match[2].trim();
+          if (!guestCompany) guestCompany = match[3].trim();
+        }
+      }
+
+      // Pattern: "NAME, [title] at [company]"
+      if (!guestName) {
+        match = firstParagraph.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+),\s+(.+?)\s+(?:at|of)\s+([A-Z][^.,]+)/);
+        if (match) {
+          guestName = match[1].trim();
+          if (!guestTitle) guestTitle = match[2].trim();
+          if (!guestCompany) guestCompany = match[3].trim();
+        }
+      }
+
+      // Pattern: "Join NAME from COMPANY"
+      if (!guestName) {
+        match = firstParagraph.match(/(?:Join|Meet|Welcome)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\s+from\s+([A-Z][^.,]+)/i);
+        if (match) {
+          guestName = match[1].trim();
+          if (!guestCompany) guestCompany = match[2].trim();
+        }
+      }
+    }
+
+    // Continue with other extractions
+    for (let i = 0; i < Math.min(lines.length, 20); i++) {
+      const line = lines[i].trim();
 
       // Extract title/position
       if (!guestTitle && (line.toLowerCase().includes('title:') || line.toLowerCase().includes('position:') || line.toLowerCase().includes('role:'))) {
@@ -164,13 +207,35 @@ function parseYouTubeContent(title: string, description: string) {
         }
       }
 
-      // Extract company
+      // Extract company from structured lines
       if (!guestCompany && line.toLowerCase().includes('company:')) {
         const companyMatch = line.match(/Company:\s*(.+?)(?:\n|$)/i);
         if (companyMatch) {
           guestCompany = companyMatch[1].trim();
         }
       }
+    }
+
+    // If still no company, extract from first paragraph context
+    if (!guestCompany && guestName && firstParagraph.includes(guestName)) {
+      // Pattern: "NAME... at/of COMPANY"
+      let match = firstParagraph.match(new RegExp(`${guestName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^.]*?\\s+(?:at|of|from|with|for)\\s+([A-Z][A-Za-z0-9\\s&]+?)(?:,|\\.|\\s+(?:where|and|to|in|is|has))`, 'i'));
+      if (match) {
+        guestCompany = match[1].trim();
+      }
+
+      // Pattern: "NAME... CEO/Founder of COMPANY"
+      if (!guestCompany) {
+        match = firstParagraph.match(new RegExp(`${guestName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^.]*?(?:CEO|Founder|Co-founder|Director|Head|VP|President)\\s+(?:of|at)\\s+([A-Z][A-Za-z0-9\\s&]+?)(?:,|\\.)`, 'i'));
+        if (match) {
+          guestCompany = match[1].trim();
+        }
+      }
+    }
+
+    // Continue with other structured extractions
+    for (let i = 0; i < Math.min(lines.length, 20); i++) {
+      const line = lines[i].trim();
 
       // Extract bio
       if (!guestBio && (line.toLowerCase().includes('bio:') || line.toLowerCase().includes('about'))) {
