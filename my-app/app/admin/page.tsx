@@ -240,10 +240,17 @@ export default function AdminPanel() {
       }
 
       showMessage('Complete episode with guest, book, FMK ranking, and company logo created successfully!');
-      e.currentTarget.reset();
+
+      // Reset form safely
+      const form = e.currentTarget;
+      if (form) {
+        setTimeout(() => form.reset(), 100);
+      }
+
       loadBooks(); // Refresh books list in case we added a new one
-      
+
     } catch (error: any) {
+      console.error('Full error:', error);
       showMessage(`Error: ${error.message}`);
     } finally {
       setLoading(false);
