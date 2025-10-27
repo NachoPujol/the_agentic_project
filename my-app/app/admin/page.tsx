@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Book {
   id: number;
@@ -13,9 +15,45 @@ interface Book {
 
 export default function AdminPanel() {
   const supabase = useMemo(() => getSupabaseClient(), []);
+  const { user, loading: authLoading, signOut } = useAuth();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [books, setBooks] = useState<Book[]>([]);
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/admin/login');
+    }
+  }, [user, authLoading, router]);
+
+  // Show loading while checking auth
+  if (authLoading) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'system-ui'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '18px', color: '#6b7280' }}>Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render admin panel if not authenticated
+  if (!user) {
+    return null;
+  }
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/admin/login');
+  };
 
   useEffect(() => {
     loadBooks();
@@ -180,10 +218,36 @@ export default function AdminPanel() {
 
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '20px', fontFamily: 'system-ui' }}>
-      <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-        <h1 style={{ color: '#2563eb', marginBottom: '10px' }}>Complete Episode Creator</h1>
-        <p style={{ color: '#6b7280' }}>Add everything for a new episode in one place: guest info, book recommendation, and FMK ranking</p>
-        <a href="/" style={{ color: '#2563eb', textDecoration: 'underline' }}>← Back to Website</a>
+      <div style={{ marginBottom: '30px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div>
+            <a href="/" style={{ color: '#2563eb', textDecoration: 'underline', fontSize: '14px' }}>← Back to Website</a>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            <span style={{ color: '#6b7280', fontSize: '14px' }}>
+              {user?.email}
+            </span>
+            <button
+              onClick={handleSignOut}
+              style={{
+                padding: '8px 16px',
+                backgroundColor: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600'
+              }}
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ color: '#2563eb', marginBottom: '10px' }}>Complete Episode Creator</h1>
+          <p style={{ color: '#6b7280' }}>Add everything for a new episode in one place: guest info, book recommendation, and FMK ranking</p>
+        </div>
       </div>
       
       {message && (
