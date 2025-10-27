@@ -16,6 +16,7 @@ export default function AdminPanel() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [books, setBooks] = useState<Book[]>([]);
+  const [extracting, setExtracting] = useState(false);
 
   useEffect(() => {
     loadBooks();
@@ -38,6 +39,52 @@ export default function AdminPanel() {
   const showMessage = (msg: string) => {
     setMessage(msg);
     setTimeout(() => setMessage(''), 4000);
+  };
+
+  const handleExtractYouTube = async () => {
+    const youtubeInput = document.querySelector('input[name="youtube_video_id"]') as HTMLInputElement;
+    const youtubeUrl = youtubeInput?.value;
+
+    if (!youtubeUrl) {
+      showMessage('Please enter a YouTube URL first');
+      return;
+    }
+
+    setExtracting(true);
+    try {
+      const response = await fetch('/api/extract-youtube', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ youtubeUrl }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        const data = result.data;
+
+        // Auto-fill form fields
+        (document.querySelector('input[name="episode_number"]') as HTMLInputElement).value = data.episodeNumber || '';
+        (document.querySelector('input[name="title"]') as HTMLInputElement).value = data.title || '';
+        (document.querySelector('input[name="thumbnail_url"]') as HTMLInputElement).value = data.thumbnail || '';
+        (document.querySelector('input[name="youtube_video_id"]') as HTMLInputElement).value = data.videoId || '';
+
+        if (data.guestName) {
+          (document.querySelector('input[name="guest_name"]') as HTMLInputElement).value = data.guestName;
+        }
+        if (data.guestCompany) {
+          (document.querySelector('input[name="guest_company"]') as HTMLInputElement).value = data.guestCompany;
+        }
+
+        showMessage('✅ YouTube data extracted successfully! Review and adjust fields as needed.');
+      } else {
+        showMessage(`Error: ${result.error}`);
+      }
+    } catch (error: any) {
+      showMessage(`Error extracting YouTube data: ${error.message}`);
+    } finally {
+      setExtracting(false);
+    }
   };
 
   const handleCompleteEpisodeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -267,12 +314,34 @@ export default function AdminPanel() {
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
                   YouTube URL or Video ID
                 </label>
-                <input
-                  name="youtube_video_id"
-                  type="text"
-                  placeholder="https://youtube.com/watch?v=abc123 or just abc123"
-                  style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
-                />
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <input
+                    name="youtube_video_id"
+                    type="text"
+                    placeholder="https://youtube.com/watch?v=abc123 or just abc123"
+                    style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleExtractYouTube}
+                    disabled={extracting}
+                    style={{
+                      padding: '8px 16px',
+                      backgroundColor: extracting ? '#ccc' : '#10b981',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: extracting ? 'not-allowed' : 'pointer',
+                      fontWeight: 'bold',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {extracting ? '🔄 Extracting...' : '✨ Auto-Fill'}
+                  </button>
+                </div>
+                <small style={{ color: '#6b7280', fontSize: '12px', marginTop: '5px', display: 'block' }}>
+                  Paste YouTube URL and click Auto-Fill to extract episode info automatically!
+                </small>
               </div>
               <div>
                 <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
