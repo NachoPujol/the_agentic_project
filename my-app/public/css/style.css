@@ -73,7 +73,7 @@ p{ margin: 0 0 16px; }
 
 /* ========= GLOBAL SPACING ========= */
 /* Global vertical rhythm (no collapsing) */
-section { padding: 60px 0; margin: 0; }
+section { padding: 80px 0; margin: 0; }
 
 
 /* ========= CARDS ========= */
@@ -120,8 +120,23 @@ body.light-theme .glass {
   border-color: #e5d7ff;
   box-shadow: none;
 }
+
+/* Light theme button fixes */
+body.light-theme .btn.btn--secondary {
+  color: #5b2d8f;
+  background: #efe7fb;
+}
+
+body.light-theme .btn.glass {
+  color: #5b2d8f;
+}
+
 .nav__links .btn {
   color: #fff !important;
+}
+
+body.light-theme .nav__links .btn.glass {
+  color: #5b2d8f !important;
 }
 
 
@@ -195,7 +210,7 @@ body.light-theme .nav__inner {
 /* mobile drawer */
 /* One-card hero layout */
 .hero{
-  padding: 28px 0 40px;
+  padding: 80px 0;
 }
 
 .hero__card{
@@ -203,10 +218,10 @@ body.light-theme .nav__inner {
   gap: 20px;
   /* on mobile, stack */
   grid-template-columns: 1fr;
-  padding: 24px;
+  padding: 0;
 }
 
-.hero__copy h1{ font-size: clamp(28px, 5vw, 48px); margin-bottom: 8px; }
+.hero__copy h1{ font-family: Inter, system-ui, -apple-system, sans-serif; font-size: clamp(28px, 5vw, 48px); margin-bottom: 8px; }
 .hero__copy p{ color: var(--muted); max-width: 70ch; }
 .actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
 
@@ -222,9 +237,9 @@ body.light-theme .nav__inner {
 /* side-by-side on desktop */
 @media (min-width: 980px){
   .hero__card{
-    grid-template-columns: 1.05fr .95fr;
+    grid-template-columns: .8fr 1.2fr;
     gap: 28px;
-    padding: 28px;
+    padding: 0;
   }
 }
 
@@ -233,18 +248,13 @@ body.light-theme .nav__inner {
 
 /* Section visuals (same background you had) */
 .logos{
-  border-top: 1px solid rgba(139, 107, 184, 0.15);
-  border-bottom: 1px solid rgba(139, 107, 184, 0.15);
-  background: rgba(26, 26, 36, 0.5);
-  backdrop-filter: blur(4px);
-  padding: 10px 0;                 /* vertical breathing room */
+  padding: 20px 0;                 /* vertical breathing room */
+  background: transparent;
 }
 
 /* Light theme logos section */
 body.light-theme .logos {
-  border-top: 1px solid rgba(0,0,0,0.06);
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-  background: rgba(255,255,255,0.55);
+  background: transparent;
 }
 
 .logos__title{
@@ -299,14 +309,9 @@ body.light-theme .logos {
 
 
 /* ============Books section============= */
-/* Hero uses this: */
-.hero {
-  padding: 28px 0 40px;
-}
-
 /* Match Books */
 .books {
-  padding: 28px 0 40px;
+  padding: 80px 0;
 }
 
 .books__card h2 {
@@ -354,7 +359,7 @@ body.light-theme .logos {
 
 
 /* ========= HORIZONTAL CARDS ========= */
-.cards-horizontal{ padding: 10px 0 16px; }
+.cards-horizontal{ padding: 80px 0; }
 .cards-horizontal h2{ margin-bottom: 4px; }
 .scroll-hint{ color: var(--muted); font-size: 14px; margin-bottom: 8px; }
 .cards__rail{
@@ -410,7 +415,7 @@ body.light-theme .logos {
 
 
 /* ========= THREE-COLUMN TABLE LEADERBOARD ========= */
-.leaderboard{ padding: 40px 0 40px; }
+.leaderboard{ padding: 80px 0; }
 .table{ padding: 0; overflow: hidden; }
 .table__row{ display: grid; grid-template-columns: 1fr; }
 .table__row > div{ padding: 14px 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
@@ -432,7 +437,7 @@ body.light-theme .table__row--head{ background: #f7f2ff; color: #3c2a5f; }
 
 
 /* ========= CTA ========= */
-.cta{ padding: 40px 0 40px; }
+.cta{ padding: 80px 0; }
 .cta__card{ text-align: center; padding: 28px; }
 .cta__form{
   margin: 10px auto 8px; display: flex; gap: 10px; flex-wrap: wrap;

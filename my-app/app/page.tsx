@@ -442,7 +442,7 @@ const getCompanies = async (): Promise<Company[]> => {
       <main>
         {/* ===== HERO ===== */}
         <section className="hero container">
-          <div className="hero__card card">
+          <div className="hero__card">
             <div className="hero__copy">
               <h1>The Podcast Where Founders Open Up About Building AI</h1>
               <p>
