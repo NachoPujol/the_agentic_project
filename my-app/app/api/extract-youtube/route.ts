@@ -239,7 +239,7 @@ function parseYouTubeContent(title: string, description: string) {
 
       // Extract bio
       if (!guestBio && (line.toLowerCase().includes('bio:') || line.toLowerCase().includes('about'))) {
-        const bioMatch = line.match(/(?:Bio|About):\s*(.+?)(?:\n\n|$)/is);
+        const bioMatch = line.match(/(?:Bio|About):\s*(.+?)(?:\n\n|$)/i);
         if (bioMatch) {
           guestBio = bioMatch[1].trim().substring(0, 500); // Limit to 500 chars
         }
