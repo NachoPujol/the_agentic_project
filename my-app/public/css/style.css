@@ -86,10 +86,16 @@ section { padding: 60px 0; margin: 0; }
 
 /* ========= GLASS EFFECT ========= */
 .glass{
-  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.18));
-  border: 1px solid rgba(255,255,255,0.35);
+  background: linear-gradient(180deg, rgba(139, 107, 184, 0.25), rgba(139, 107, 184, 0.15));
+  border: 1px solid rgba(139, 107, 184, 0.3);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* Light theme glass */
+body.light-theme .glass {
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.18));
+  border: 1px solid rgba(255,255,255,0.35);
 }
 
 /* ========= BUTTONS ========= */
@@ -129,10 +135,16 @@ section { padding: 60px 0; margin: 0; }
   padding: 8px 12px;
   border-radius: 14px;
   box-shadow: var(--shadow);
-  /* glass */
+  /* glass - dark theme */
+  background: rgba(26, 26, 36, 0.7);
+  border: 1px solid rgba(139, 107, 184, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Light theme navbar */
+body.light-theme .nav__inner {
   background: rgba(255,255,255,0.45);
   border: 1px solid rgba(255,255,255,0.55);
-  backdrop-filter: blur(10px);
 }
 .brand{
   display: inline-flex; gap: 10px; align-items: center;
@@ -221,11 +233,18 @@ section { padding: 60px 0; margin: 0; }
 
 /* Section visuals (same background you had) */
 .logos{
+  border-top: 1px solid rgba(139, 107, 184, 0.15);
+  border-bottom: 1px solid rgba(139, 107, 184, 0.15);
+  background: rgba(26, 26, 36, 0.5);
+  backdrop-filter: blur(4px);
+  padding: 10px 0;                 /* vertical breathing room */
+}
+
+/* Light theme logos section */
+body.light-theme .logos {
   border-top: 1px solid rgba(0,0,0,0.06);
   border-bottom: 1px solid rgba(0,0,0,0.06);
   background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(4px);
-  padding: 10px 0;                 /* vertical breathing room */
 }
 
 .logos__title{
