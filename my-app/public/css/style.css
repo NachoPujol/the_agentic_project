@@ -1,19 +1,44 @@
 /* ========= THEME ========= */
 :root{
-  /* Super-light purple background */
-  --bg: #faf6ff;                 /* page background */
-  --surface: #ffffff;            /* cards */
-  --text: #0e0e0e;               /* main text */
-  --muted: #6b6b6b;              /* secondary text */
-  --brand: #5b2d8f;              /* accent (your purple) */
+  /* Light theme (kept for toggle) */
+  --bg-light: #faf6ff;
+  --surface-light: #ffffff;
+  --text-light: #0e0e0e;
+  --muted-light: #6b6b6b;
+  --brand-light: #5b2d8f;
+  --shadow-light: 0 8px 24px rgba(17, 12, 34, 0.08);
 
-  --radius: 16px;                /* card and button rounding */
-  --shadow: 0 8px 24px rgba(17, 12, 34, 0.08);
+  /* Dark theme (DEFAULT) */
+  --bg-dark: #0a0a0f;
+  --surface-dark: #1a1a24;
+  --text-dark: #e8e8f0;
+  --muted-dark: #9898a8;
+  --brand-dark: #8b6bb8;
+  --shadow-dark: 0 8px 24px rgba(0, 0, 0, 0.4);
 
+  /* Active theme variables (dark by default) */
+  --bg: var(--bg-dark);
+  --surface: var(--surface-dark);
+  --text: var(--text-dark);
+  --muted: var(--muted-dark);
+  --brand: var(--brand-dark);
+  --shadow: var(--shadow-dark);
+
+  --radius: 16px;
   --maxw: 1120px;
   --g1: 18px;
   --g2: 28px;
   --g3: 40px;
+}
+
+/* Light theme class */
+body.light-theme{
+  --bg: var(--bg-light);
+  --surface: var(--surface-light);
+  --text: var(--text-light);
+  --muted: var(--muted-light);
+  --brand: var(--brand-light);
+  --shadow: var(--shadow-light);
 }
 
 *{ box-sizing: border-box }
@@ -21,10 +46,18 @@ html, body { margin: 0; padding: 0; }
 body{
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--text);
+  background: radial-gradient(1200px 1200px at 20% -10%, rgba(139, 107, 184, 0.15) 0%, transparent 40%),
+              radial-gradient(900px 900px at 90% 0%, rgba(139, 107, 184, 0.1) 0%, transparent 35%),
+              var(--bg);
+  line-height: 1.55;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Light theme background gradients */
+body.light-theme{
   background: radial-gradient(1200px 1200px at 20% -10%, #f1e7ff 0%, transparent 40%),
               radial-gradient(900px 900px at 90% 0%, #efe5ff 0%, transparent 35%),
               var(--bg);
-  line-height: 1.55;
 }
 
 .container{
@@ -361,9 +394,13 @@ section { padding: 60px 0; margin: 0; }
 .leaderboard{ padding: 40px 0 40px; }
 .table{ padding: 0; overflow: hidden; }
 .table__row{ display: grid; grid-template-columns: 1fr; }
-.table__row > div{ padding: 14px 16px; border-top: 1px solid #eee; }
-.table__row--head{ background: #f7f2ff; color: #3c2a5f; font-weight: 700; }
+.table__row > div{ padding: 14px 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+.table__row--head{ background: rgba(139, 107, 184, 0.15); color: var(--brand); font-weight: 700; }
 .table__row--head > div{ border-top: 0; }
+
+/* Light theme table */
+body.light-theme .table__row > div{ border-top: 1px solid #eee; }
+body.light-theme .table__row--head{ background: #f7f2ff; color: #3c2a5f; }
 
 @media (min-width: 800px){
   .table__row{ grid-template-columns: repeat(3, 1fr); }
@@ -395,7 +432,18 @@ section { padding: 60px 0; margin: 0; }
 .field{ display: grid; gap: 6px; }
 .field label{ font-weight: 600; }
 .field input{
-  padding: 12px 14px; border-radius: 12px; border: 1px solid #e8dfff; background:#fff;
+  padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgba(139, 107, 184, 0.3);
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Light theme inputs */
+body.light-theme .field input,
+body.light-theme .cta__form input {
+  border: 1px solid #e8dfff;
+  background: #fff;
+  color: var(--text);
 }
 
 @media (min-width: 800px){
@@ -426,5 +474,34 @@ section { padding: 60px 0; margin: 0; }
 }
 footer {
   margin-top: 80px;  /* creates gap above footer */
+}
+
+/* ========= THEME TOGGLE ========= */
+.theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
 }
 

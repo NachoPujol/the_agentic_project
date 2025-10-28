@@ -67,6 +67,7 @@ export default function Page() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [videoId, setVideoId] = useState<string | null>(null);
+  const [isLightTheme, setIsLightTheme] = useState(false);
   const railRef = useRef<HTMLDivElement | null>(null);
   const marqueeRef = useRef<HTMLDivElement | null>(null);
 
@@ -328,6 +329,19 @@ const getCompanies = async (): Promise<Company[]> => {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+
+  // Theme toggle effect
+  useEffect(() => {
+    if (isLightTheme) {
+      document.body.classList.add('light-theme');
+    } else {
+      document.body.classList.remove('light-theme');
+    }
+  }, [isLightTheme]);
+
+  const toggleTheme = () => {
+    setIsLightTheme(!isLightTheme);
+  };
 
   // --- helpers ---
   const openVideo = (raw: string) => {
@@ -654,7 +668,16 @@ const getCompanies = async (): Promise<Company[]> => {
           </div>
         </div>
       )}
-      
+
+      {/* ===== THEME TOGGLE ===== */}
+      <button
+        className="theme-toggle"
+        onClick={toggleTheme}
+        aria-label={isLightTheme ? "Switch to dark theme" : "Switch to light theme"}
+      >
+        {isLightTheme ? '🌙' : '☀️'}
+      </button>
+
     </>
   );
 }
